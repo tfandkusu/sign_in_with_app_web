@@ -24,7 +24,7 @@ replace('src/main/resources/templates/login.html',{
     })
 
 replace('src/main/webapp/WEB-INF/appengine-web.xml',
-    {'your.module': module})
+    {'your_module': module})
 
 replace('build.gradle',
     {'your_project_id': project_id})
