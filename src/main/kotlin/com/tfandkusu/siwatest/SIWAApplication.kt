@@ -86,6 +86,12 @@ fun Application.main() {
             model["email"] = "mail@example.com"
             call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
         }
+        get( "/redirect_to_canceled") {
+            val model = mutableMapOf<String, String>()
+            model["state"] = "forCSRF"
+            model["error"] = "user_cancelled_authorize"
+            call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
+        }
         // Static files
         static("") {
             resource("jquery.min.js")

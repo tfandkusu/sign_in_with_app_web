@@ -12,10 +12,13 @@
 <div class="container">
     <h1 class="mt-3">リダイレクト先です。</h1>
     <h2>ポストされた内容</h2>
+
+    <#if id_token?has_content>
     <p class="mt-3">
         <strong>id_token</strong><br>
         ${id_token}
     </p>
+    </#if>
     <p>
         <strong>state</strong><br>
         ${state}
@@ -24,6 +27,7 @@
         <strong>error</strong><br>
         ${error}
     </p>
+    <#if id_token?has_content>
     <h2>id_tokenの内容</h2>
     <p class="mt-3">
         <strong>検証結果</strong><br>
@@ -37,6 +41,7 @@
         <strong>Email</strong><br>
         ${email}
     </p>
+    </#if>
 </div>
 </body>
 </html>
