@@ -8,5 +8,5 @@ jobs:
       - checkout
 
       - run:
-          name: Build
-          command: ./gradlew war
+          name: Set credentials
+          command: python3 set_credentials.py
