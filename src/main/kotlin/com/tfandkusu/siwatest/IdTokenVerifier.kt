@@ -8,22 +8,27 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import java.security.interfaces.RSAPublicKey
 
 
-object IdTokenVerifier {
+interface IdTokenVerifier {
     /**
-     * JWTを検証してユーザIDを受け取る
+     * Verify JWT and get user information
      */
-    fun verify(token: String): User {
-        // JWTをデコードする
+    fun verify(token: String): User
+}
+
+
+class IdTokenVerifierImpl : IdTokenVerifier {
+    override fun verify(token: String): User {
+        // Decode JWT
         val jwt = JWT.decode(token)
-        // KeyIDから公開鍵を取得する
+        // Get public key from KeyID
         val provider = UrlJwkProvider(URL("https://appleid.apple.com/auth/keys"))
         val jwk = provider[jwt.keyId]
         val publicKey = jwk.publicKey
-        // JWTのPayloadからユーザIDとメールアドレスを取得する
+        // Get user id and password from payload of JWT
         val email = jwt.claims["email"]?.asString() ?: ""
         val id = jwt.subject
         try {
-            // 公開鍵で検証する
+            // Verify with public key
             val algorithm = Algorithm.RSA256(publicKey as RSAPublicKey, null)
             val verifier = JWT.require(algorithm)
                     .withIssuer("https://appleid.apple.com")
@@ -32,7 +37,7 @@ object IdTokenVerifier {
             verifier.verify(token)
             return User(id, email, true)
         } catch (e: JWTVerificationException) {
-            // 検証に失敗(不正なログイン)
+            // Verification failed (unauthorized)
             return User(id, email, false)
         }
     }
