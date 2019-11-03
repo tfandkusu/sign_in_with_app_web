@@ -10,3 +10,12 @@ jobs:
       - run:
           name: Set credentials
           command: python3 set_credentials.py
+      - run:
+          name: Make GCP Service Account Key File
+          command: echo "$GCP_SERVICE_ACCOUNT_KEY" | base64 -d > "$HOME/gcp-service-account-key.json"
+      - run:
+          name: Activate Service Account
+          command: gcloud auth activate-service-account --key-file "$HOME/gcp-service-account-key.json"
+      - run:
+          name: Deploy
+          command: ./gradlew appengineDeploy
