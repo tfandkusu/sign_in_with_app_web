@@ -1,6 +1,9 @@
 version: 2
 jobs:
-  build:
+  deploy:
+    branches:
+      only:
+        - release
     docker:
       - image: google/cloud-sdk:latest
 
