@@ -56,7 +56,6 @@ fun Application.main() {
             val user = IdTokenVerifier.verify(idToken)
             // HTMLをレンダリングする
             val model = mutableMapOf<String, String>()
-            model["code"] = params["code"] ?: ""
             model["id_token"] = idToken
             model["state"] = params["state"] ?: ""
             model["error"] = params["error"] ?: ""
@@ -67,6 +66,19 @@ fun Application.main() {
             }
             model["userId"] = user.id
             model["email"] = user.email
+            call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
+        }
+        // Dummy redirect page for view test
+        get("/redirect_to") {
+            // Make view model
+            val model = mutableMapOf<String, String>()
+            // From jwt.io
+            model["id_token"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            model["state"] = "forCSRF"
+            model["error"] = ""
+            model["verify"] = "OK"
+            model["userId"] = "12345"
+            model["email"] = "mail@example.com"
             call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
         }
         // Static files
