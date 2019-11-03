@@ -3,17 +3,40 @@
 <head>
     <meta charset="utf-8">
     <title>リダイレクト先</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
 </head>
 <body>
-<h1>リダイレクト先です。</h1>
-<h2>ポストされた内容</h2>
-<p>code ${code}</p>
-<p>id_token ${id_token}</p>
-<p>state ${state}</p>
-<p>error ${error}</p>
-<h2>id_tokenの内容</h2>
-<p>検証結果 ${verify}</p>
-<p>ユーザID ${userId}</p>
-<p>Email ${email}</p>
+<div class="container">
+    <h1 class="mt-3">リダイレクト先です。</h1>
+    <h2>ポストされた内容</h2>
+    <p class="mt-3">
+        <strong>id_token</strong><br>
+        ${id_token}
+    </p>
+    <p>
+        <strong>state</strong><br>
+        ${state}
+    </p>
+    <p>
+        <strong>error</strong><br>
+        ${error}
+    </p>
+    <h2>id_tokenの内容</h2>
+    <p class="mt-3">
+        <strong>検証結果</strong><br>
+        ${verify}
+    </p>
+    <p>
+        <strong>ユーザID</strong><br>
+        ${userId}
+    </p>
+    <p>
+        <strong>Email</strong><br>
+        ${email}
+    </p>
+</div>
 </body>
 </html>

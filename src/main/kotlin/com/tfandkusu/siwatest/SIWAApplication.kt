@@ -7,6 +7,7 @@ import io.ktor.freemarker.FreeMarker
 import io.ktor.freemarker.FreeMarkerContent
 import io.ktor.html.respondHtml
 import io.ktor.http.content.resource
+import io.ktor.http.content.resources
 import io.ktor.http.content.static
 import io.ktor.request.receiveParameters
 import io.ktor.response.respond
@@ -22,7 +23,7 @@ fun Application.main() {
     // This uses use the logger to log every call (request/response)
     install(CallLogging)
     install(FreeMarker) {
-        // this: VelocityEngine
+        // this: FreeMarkerEngine
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
     }
     // Registers routes
@@ -32,21 +33,21 @@ fun Application.main() {
         get("/") {
             call.respondHtml {
                 head {
-                    title { +"Sandbox" }
+                    title { +"Sign in with Apple Test Page." }
                 }
                 body {
-                    p {
-                        +"Sandbox for tfandkusu."
+                    a(href = "/login") {
+                        +"Login page"
                     }
                 }
             }
         }
-        // ログイン画面
+        // Login page
         get("/login") {
             val model = mapOf<String, String>()
             call.respond(FreeMarkerContent("login.html", model, "e"))
         }
-        // リダイレクト先
+        // Redirect page
         post("/redirect_to") {
             // フォームデータの取得
             val params = call.receiveParameters()
@@ -55,7 +56,6 @@ fun Application.main() {
             val user = IdTokenVerifier.verify(idToken)
             // HTMLをレンダリングする
             val model = mutableMapOf<String, String>()
-            model["code"] = params["code"] ?: ""
             model["id_token"] = idToken
             model["state"] = params["state"] ?: ""
             model["error"] = params["error"] ?: ""
@@ -67,6 +67,25 @@ fun Application.main() {
             model["userId"] = user.id
             model["email"] = user.email
             call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
+        }
+        // Dummy redirect page for view test
+        get("/redirect_to") {
+            // Make view model
+            val model = mutableMapOf<String, String>()
+            // From jwt.io
+            model["id_token"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            model["state"] = "forCSRF"
+            model["error"] = ""
+            model["verify"] = "OK"
+            model["userId"] = "12345"
+            model["email"] = "mail@example.com"
+            call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
+        }
+        // Static files
+        static("") {
+            resource("jquery.min.js")
+            resource("bootstrap.min.css")
+            resource("bootstrap.min.js")
         }
     }
 }
