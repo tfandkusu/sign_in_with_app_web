@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Deploy
+          name: Test
           command: ./gradlew test
 
   deploy:
