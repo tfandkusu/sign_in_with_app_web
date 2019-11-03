@@ -13,6 +13,9 @@ import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.routing.*
 import kotlinx.html.*
+import org.koin.dsl.module
+import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
 
 
 // Entry Point of the application as defined in resources/application.conf.
@@ -26,6 +29,17 @@ fun Application.main() {
         // this: FreeMarkerEngine
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
     }
+
+    val appModule = module {
+        single { IdTokenVerifierImpl() as IdTokenVerifier }
+        single { RedirectToPresenter(get()) }
+    }
+    install(Koin) {
+        modules(appModule)
+    }
+
+    val redirectToPresenter: RedirectToPresenter by inject()
+
     // Registers routes
     routing {
         // Here we use a DSL for building HTML on the route "/"
@@ -49,23 +63,14 @@ fun Application.main() {
         }
         // Redirect page
         post("/redirect_to") {
-            // フォームデータの取得
+            // Get posted form data
             val params = call.receiveParameters()
             val idToken = params["id_token"] ?: ""
-            // JWTを検証する
-            val user = IdTokenVerifier.verify(idToken)
-            // HTMLをレンダリングする
-            val model = mutableMapOf<String, String>()
-            model["id_token"] = idToken
-            model["state"] = params["state"] ?: ""
-            model["error"] = params["error"] ?: ""
-            if (user.verify) {
-                model["verify"] = "OK"
-            } else {
-                model["verify"] = "Failed"
-            }
-            model["userId"] = user.id
-            model["email"] = user.email
+            val state = params["state"] ?: ""
+            val error = params["error"] ?: ""
+            // Create view model
+            val model = redirectToPresenter.render(idToken, state, error)
+            // Render HTML
             call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
         }
         // Dummy redirect page for view test

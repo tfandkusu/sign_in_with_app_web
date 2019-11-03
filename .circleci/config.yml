@@ -1,15 +1,19 @@
 version: 2
 jobs:
   build:
-    branches:
-      only:
-        - release
     docker:
       - image: google/cloud-sdk:latest
-
     steps:
       - checkout
+      - run:
+          name: Test
+          command: ./gradlew test
 
+  deploy:
+    docker:
+      - image: google/cloud-sdk:latest
+    steps:
+      - checkout
       - run:
           name: Set credentials
           command: python3 set_credentials.py
@@ -22,3 +26,15 @@ jobs:
       - run:
           name: Deploy
           command: ./gradlew appengineDeploy
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - release
