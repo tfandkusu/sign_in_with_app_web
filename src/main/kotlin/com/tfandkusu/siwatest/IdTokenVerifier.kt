@@ -5,6 +5,8 @@ import java.net.URL
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.security.interfaces.RSAPublicKey
 
 
@@ -12,17 +14,19 @@ interface IdTokenVerifier {
     /**
      * Verify JWT and get user information
      */
-    fun verify(token: String): User
+    suspend fun verify(token: String): User
 }
 
 
 class IdTokenVerifierImpl : IdTokenVerifier {
-    override fun verify(token: String): User {
+    override suspend fun verify(token: String): User {
         // Decode JWT
         val jwt = JWT.decode(token)
         // Get public key from KeyID
-        val provider = UrlJwkProvider(URL("https://appleid.apple.com/auth/keys"))
-        val jwk = provider[jwt.keyId]
+        val jwk = withContext(Dispatchers.IO) {
+            val provider = UrlJwkProvider(URL("https://appleid.apple.com/auth/keys"))
+            provider[jwt.keyId]
+        }
         val publicKey = jwk.publicKey
         // Get user id and password from payload of JWT
         val email = jwt.claims["email"]?.asString() ?: ""

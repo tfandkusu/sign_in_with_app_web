@@ -1,7 +1,7 @@
 package com.tfandkusu.siwatest
 
 import io.kotlintest.shouldBe
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -10,7 +10,7 @@ class RedirectToPresenterTest {
     @Test
     fun success() = runBlocking {
         val idTokenVerifier = mockk<IdTokenVerifier>()
-        every {
+        coEvery {
             idTokenVerifier.verify("jwt.payload.signature")
         } returns User("12345", "mail@example.com", true)
         val presenter = RedirectToPresenter(idTokenVerifier)
@@ -22,7 +22,7 @@ class RedirectToPresenterTest {
     @Test
     fun verificationFailed() = runBlocking {
         val idTokenVerifier = mockk<IdTokenVerifier>()
-        every {
+        coEvery {
             idTokenVerifier.verify("jwt.payload.signature")
         } returns User("12345", "mail@example.com", false)
         val presenter = RedirectToPresenter(idTokenVerifier)
