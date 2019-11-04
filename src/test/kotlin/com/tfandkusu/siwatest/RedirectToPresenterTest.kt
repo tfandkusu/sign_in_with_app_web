@@ -3,11 +3,12 @@ package com.tfandkusu.siwatest
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class RedirectToPresenterTest {
     @Test
-    fun success() {
+    fun success() = runBlocking {
         val idTokenVerifier = mockk<IdTokenVerifier>()
         every {
             idTokenVerifier.verify("jwt.payload.signature")
@@ -19,7 +20,7 @@ class RedirectToPresenterTest {
     }
 
     @Test
-    fun verificationFailed() {
+    fun verificationFailed() = runBlocking {
         val idTokenVerifier = mockk<IdTokenVerifier>()
         every {
             idTokenVerifier.verify("jwt.payload.signature")
@@ -31,7 +32,7 @@ class RedirectToPresenterTest {
     }
 
     @Test
-    fun errorInApple() {
+    fun errorInApple() = runBlocking {
         val idTokenVerifier = mockk<IdTokenVerifier>()
         val presenter = RedirectToPresenter(idTokenVerifier)
         val model = presenter.render("", "forCSRF", "user_cancelled_authorize")
