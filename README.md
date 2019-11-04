@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/tfandkusu/sign_in_with_apple_web/tree/master.svg?style=svg)](https://circleci.com/gh/tfandkusu/sign_in_with_apple_web/tree/master)
+
 # Sign in with Apple test Web page
 
 Try Sign in with Apple for Web page.
