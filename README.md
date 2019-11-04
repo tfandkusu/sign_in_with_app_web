@@ -14,7 +14,7 @@ If you use CircleCI, these variables are set to `Environment Variables` in the p
 | ---- | ---- |
 | APPLE_CLIENT_ID | Identifer of Services IDs in Apple Developer |
 | GOOGLE_PROJECT_ID  |  GCP Project ID  |
-| GOOGLE_MODULE | Service name for GAE |
+| GOOGLE_MODULE | Service name for Google App Engine |
 | GCP_SERVICE_ACCOUNT_KEY | Base64 encoded GCP Service Account Key for App Engine Deploy (Only for CircleCI) |
 
 If you use CircleCI, push the `release` branch to deploy to Google App Engine.
