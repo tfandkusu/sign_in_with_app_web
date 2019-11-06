@@ -1,18 +1,25 @@
 package com.tfandkusu.siwatest
 
 import freemarker.cache.ClassTemplateLoader
-import io.ktor.application.*
-import io.ktor.features.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.CallLogging
+import io.ktor.features.DefaultHeaders
 import io.ktor.freemarker.FreeMarker
 import io.ktor.freemarker.FreeMarkerContent
 import io.ktor.html.respondHtml
 import io.ktor.http.content.resource
-import io.ktor.http.content.resources
 import io.ktor.http.content.static
 import io.ktor.request.receiveParameters
 import io.ktor.response.respond
-import io.ktor.routing.*
-import kotlinx.html.*
+import io.ktor.routing.get
+import io.ktor.routing.post
+import io.ktor.routing.routing
+import kotlinx.html.a
+import kotlinx.html.body
+import kotlinx.html.head
+import kotlinx.html.title
 import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
@@ -86,7 +93,7 @@ fun Application.main() {
             model["email"] = "mail@example.com"
             call.respond(FreeMarkerContent("redirect_to.html", model, "e"))
         }
-        get( "/redirect_to_canceled") {
+        get("/redirect_to_canceled") {
             val model = mutableMapOf<String, String>()
             model["state"] = "forCSRF"
             model["error"] = "user_cancelled_authorize"
